@@ -7,6 +7,15 @@ import myinterface.DoublyLinkedListADT;
  */
 
 public class MyDoublyLinkedList implements DoublyLinkedListADT {
+    private Node head,tail;
+    private int size;
+    public MyDoublyLinkedList()
+    {
+        head = null;
+        tail = null;
+        size = 0;
+
+    }
     /**
      * This method will add a new node in the linked list at the head.
      * It is also known as insertAtBeginning or insertAtHead.
@@ -17,6 +26,19 @@ public class MyDoublyLinkedList implements DoublyLinkedListADT {
      */
     @Override
     public void addFirst(int element) {
+        Node node = new Node(element);
+        if(isEmpty())
+        {
+            head = node;
+            tail = node;
+            size++;
+            return;
+        }
+        head.setPrev(node);
+        node.setNext(head);
+        head = node;
+        size++;
+        return;
 
     }
 
@@ -30,6 +52,19 @@ public class MyDoublyLinkedList implements DoublyLinkedListADT {
      */
     @Override
     public void addLast(int element) {
+        Node node = new Node(element);
+        if(isEmpty())
+        {
+            head = node;
+            tail = node;
+            size++;
+            return;
+        }
+        node.setPrev(tail);
+        tail.setNext(node);
+        tail = node;
+        size++;
+        return;
 
     }
 
@@ -43,6 +78,34 @@ public class MyDoublyLinkedList implements DoublyLinkedListADT {
      */
     @Override
     public void addInBetween(int element, int givenElement) {
+        if(!isEmpty())
+        {
+            Node node = new Node(element);
+            Node temp = head;
+            while(temp!=null && temp.getData()!=givenElement)
+            {
+                temp = temp.getNext();
+            }
+            if(temp==null)
+                return;
+            if(temp.getNext()==null && temp.getData()==givenElement)
+            {
+                temp.setNext(node);
+                node.setPrev(temp);
+                tail = node;
+                size++;
+                return;
+            }
+                node.setNext(temp.getNext());
+                node.setPrev(temp);
+                temp.getNext().setPrev(node);
+                temp.setNext(node);
+                size++;
+                return;
+
+
+        }
+        return;
 
     }
 
@@ -55,6 +118,13 @@ public class MyDoublyLinkedList implements DoublyLinkedListADT {
      */
     @Override
     public int removeFirst() {
+        if(!isEmpty())
+        {
+            Node temp = head;
+            head = head.getNext();
+            size--;
+            return temp.getData();
+        }
         return 0;
     }
 
@@ -68,6 +138,14 @@ public class MyDoublyLinkedList implements DoublyLinkedListADT {
      */
     @Override
     public int removeLast() {
+         if(!isEmpty())
+        {
+            Node temp = tail;
+            tail = tail.getPrev();
+            tail.setNext(null);
+            size--;
+            return temp.getData();
+        }
         return 0;
     }
 
@@ -82,7 +160,20 @@ public class MyDoublyLinkedList implements DoublyLinkedListADT {
      */
     @Override
     public int removeLastWithoutUsingTail() {
-        return 0;
+        int res = 0;
+        if(!isEmpty())
+        {
+            Node temp = head;
+            while(temp.getNext()!=null)
+            {
+                temp = temp.getNext();
+            }
+            tail = temp.getPrev();
+            tail.setNext(null);
+            size--;
+            res = temp.getData();
+        }
+        return res;
     }
 
     /**
@@ -96,7 +187,35 @@ public class MyDoublyLinkedList implements DoublyLinkedListADT {
      */
     @Override
     public int removeGivenNode(int givenElement) {
-        return 0;
+        int res = 0;
+        if(!isEmpty())
+        {
+            Node temp = head;
+            while(temp!=null && temp.getData()!=givenElement)
+            {
+                temp = temp.getNext();
+            }
+            if(temp==head)
+            {
+                res = head.getData();
+                head = temp.getNext();
+                size--;
+                return res;
+            }
+            if(temp == tail)
+            {
+                res = temp.getData();
+                tail = temp.getPrev();
+                tail.setNext(null);
+                size--;
+                return res;
+            }
+            res = temp.getData();
+            temp.getPrev().setNext(temp.getNext());
+            temp.getNext().setPrev(temp.getPrev());
+            size--; 
+        }
+        return res;
     }
 
     /**
@@ -108,6 +227,8 @@ public class MyDoublyLinkedList implements DoublyLinkedListADT {
      */
     @Override
     public int first() {
+        if(!isEmpty())
+        return head.getData();
         return 0;
     }
 
@@ -121,6 +242,8 @@ public class MyDoublyLinkedList implements DoublyLinkedListADT {
      */
     @Override
     public int last() {
+         if(!isEmpty())
+            return tail.getData();
         return 0;
     }
 
@@ -135,7 +258,17 @@ public class MyDoublyLinkedList implements DoublyLinkedListADT {
      */
     @Override
     public int lastWithoutUsingTail() {
-        return 0;
+        int res = 0;
+        if(!isEmpty())
+        {
+            Node temp = head;
+            while(temp.getNext()!=null)
+            {
+                temp = temp.getNext();
+            }
+            res = temp.getData();
+        }
+        return res;
     }
 
     /**
@@ -145,7 +278,7 @@ public class MyDoublyLinkedList implements DoublyLinkedListADT {
      */
     @Override
     public boolean isEmpty() {
-        return false;
+        return head==null;
     }
 
     /**
@@ -155,7 +288,7 @@ public class MyDoublyLinkedList implements DoublyLinkedListADT {
      */
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     /**
@@ -164,6 +297,14 @@ public class MyDoublyLinkedList implements DoublyLinkedListADT {
      */
     @Override
     public void traverse() {
+         Node temp = head;
+        System.out.print("[");
+        while(temp!=null)
+        {
+            System.out.print(temp.getData()+",");
+            temp = temp.getNext();
+        }
+        System.out.println("]");
 
     }
 
@@ -176,6 +317,13 @@ public class MyDoublyLinkedList implements DoublyLinkedListADT {
      */
     @Override
     public boolean search(int searchElement) {
+         Node temp = head;
+        while(temp!=null && temp.getData()!=searchElement)
+        {
+            temp = temp.getNext();
+        }
+        if(temp!=null)
+            return true;
         return false;
     }
 }
